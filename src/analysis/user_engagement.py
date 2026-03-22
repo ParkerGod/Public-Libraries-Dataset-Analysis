@@ -19,9 +19,8 @@ def plot_user_engagement():
     plt.show()
     
     # ===== 堆叠条形图：项目、参考问题、项目浏览量 =====
-    stacked_df = df[["Library", "Total Programs (Synchronous + Prerecorded)", "Reference Questions", "Total Program Attendance & Views"]]
-    stacked_df.set_index("Library", inplace=True)
-    stacked_df = stacked_df.head(10)  # 限制显示数量以便于可视化
+    stacked_df = df[["Library", "Total Programs (Synchronous + Prerecorded)", "Reference Questions", "Total Program Attendance & Views"]].copy()
+    stacked_df = stacked_df.set_index("Library").head(10)  # 限制显示数量以便于可视化
     stacked_df.plot(kind="bar", stacked=True, figsize=(14, 6), colormap="Paired")
     plt.title("Breakdown of User Engagement by Library (Top 10)")
     plt.xlabel("Library")

@@ -41,15 +41,17 @@ def plot_fiscal_year_trends():
     print("\nYear-over-Year Percentage Change:")
     print(pct_change)
     
-    # 计算人均指标
-    df["Circulation Per Capita"] = df["Total Circulation"] / df["Population of Service Area"]
-    df["Programs Per Capita"] = df["Total Program Attendance & Views"] / df["Population of Service Area"]
-    per_capita_df = df.groupby("Fiscal Year")[["Circulation Per Capita", "Programs Per Capita"]].mean().reset_index()
+    # 计算人均指标（使用 assign 避免 SettingWithCopyWarning 风险）
+    df = df.assign(
+        Circulation_Per_Capita=df["Total Circulation"] / df["Population of Service Area"],
+        Programs_Per_Capita=df["Total Program Attendance & Views"] / df["Population of Service Area"]
+    )
+    per_capita_df = df.groupby("Fiscal Year")[["Circulation_Per_Capita", "Programs_Per_Capita"]].mean().reset_index()
     
     # 人均趋势折线图
     plt.figure(figsize=(14, 6))
-    plt.plot(per_capita_df["Fiscal Year"], per_capita_df["Circulation Per Capita"], marker='o', label="Circulation Per Capita")
-    plt.plot(per_capita_df["Fiscal Year"], per_capita_df["Programs Per Capita"], marker='s', label="Programs Per Capita")
+    plt.plot(per_capita_df["Fiscal Year"], per_capita_df["Circulation_Per_Capita"], marker='o', label="Circulation Per Capita")
+    plt.plot(per_capita_df["Fiscal Year"], per_capita_df["Programs_Per_Capita"], marker='s', label="Programs Per Capita")
     plt.title("Per Capita Library Service Trends", fontsize=16)
     plt.xlabel("Fiscal Year")
     plt.ylabel("Average Per Capita Value")
